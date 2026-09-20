@@ -1,0 +1,24 @@
+{
+  "name": "jev-hackathon-for-nasa",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@ai-sdk/gateway": "^4.0.87",
+    "ai": "^7.0.107",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "packageManager": "pnpm@11.2.2",
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.5",
+    "prettier": "^3.9.8"
+  }
+}

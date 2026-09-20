@@ -1,0 +1,263 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, sans-serif;
+  background: #0d1117;
+  color: #edf2f7;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #17345b, #0d1117 48%);
+}
+main {
+  width: 100%;
+  margin: 0 auto;
+  padding: 8vh clamp(16px, 4vw, 64px) 12vh;
+}
+.intro {
+  max-width: 560px;
+  color: #a9b7c7;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+.field {
+  margin-top: 28px;
+}
+.eyebrow {
+  color: #72e6b1;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+h1 {
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  line-height: 0.98;
+  margin: 12px 0;
+}
+form {
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+select {
+  display: block;
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 14px;
+  border: 1px solid #3a5068;
+  border-radius: 12px;
+  background: #121c29;
+  color: inherit;
+  font: inherit;
+}
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 170px;
+  resize: vertical;
+  padding: 16px;
+  border: 1px solid #3a5068;
+  border-radius: 12px;
+  background: #121c29;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
+}
+button {
+  margin-top: 14px;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 19px;
+  background: #72e6b1;
+  color: #092018;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+section {
+  margin-top: 34px;
+  padding: 28px;
+  border: 1px solid #314a64;
+  border-radius: 20px;
+  background: rgba(18, 28, 41, 0.9);
+  line-height: 1.6;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+}
+.muted {
+  color: #a9b7c7;
+}
+.status,
+.error {
+  margin-top: 14px;
+}
+.error {
+  color: #ff9d9d;
+}
+.result-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+h2 {
+  margin: 0;
+  font-size: 4rem;
+  line-height: 1;
+}
+.result-icon {
+  font-size: 3rem;
+  color: #72e6b1;
+}
+.explanation {
+  color: #d6e0ea;
+  margin: 24px 0;
+}
+.edit-toggle {
+  display: block;
+  margin: 28px 0 0 auto;
+  background: transparent;
+  color: #a9b7c7;
+  border: 1px solid #3a5068;
+}
+.editor {
+  margin-top: 16px;
+}
+fieldset {
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid #314a64;
+  border-radius: 12px;
+}
+legend {
+  padding: 0 6px;
+  color: #72e6b1;
+}
+.editor-grid {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+}
+.editor-grid input {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #3a5068;
+  border-radius: 8px;
+  background: #121c29;
+  color: inherit;
+  font: inherit;
+}
+.editor-grid input:nth-child(n + 3) {
+  grid-column: 1 / -1;
+}
+
+.matches {
+  display: grid;
+  gap: 20px;
+}
+.match-top {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.match-top span {
+  font-size: 1.4rem;
+}
+.match-top b {
+  color: #72e6b1;
+}
+.match small {
+  display: block;
+  color: #a9b7c7;
+  margin-top: 6px;
+}
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 12px;
+  margin-top: 30px;
+}
+.insight-grid > div {
+  padding: 18px;
+  border: 1px solid #314a64;
+  border-radius: 14px;
+  background: #121c29;
+}
+.insight-grid h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+.insight-grid p {
+  margin: 8px 0 0;
+  color: #c6d2df;
+}
+.insight-grid p span {
+  margin-right: 6px;
+}
+.insight-grid .insight-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #a9b7c7;
+  font-size: 0.85rem;
+}
+.bar {
+  height: 8px;
+  margin-top: 9px;
+  border-radius: 99px;
+  background: #26384d;
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #72e6b1;
+  transition: width 0.4s ease;
+}
+
+.language {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 28px;
+}
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0 30px;
+  flex-wrap: wrap;
+}
+.mode-switch button {
+  margin: 0;
+  background: #121c29;
+  color: #a9b7c7;
+  border: 1px solid #3a5068;
+}
+.mode-switch button.active {
+  background: #72e6b1;
+  color: #092018;
+}
+.match-result {
+  max-width: 620px;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+.challenge-link {
+  color: #72e6b1;
+  font-weight: 700;
+}
+.language button {
+  margin: 0;
+  padding: 7px 10px;
+  background: transparent;
+  color: #a9b7c7;
+  border: 1px solid #3a5068;
+}
+.language button.active {
+  background: #72e6b1;
+  color: #092018;
+}
