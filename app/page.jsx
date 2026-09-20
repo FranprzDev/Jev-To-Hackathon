@@ -58,6 +58,7 @@ export default function Home() {
   const [mode, setMode] = useState("evaluate");
   const [idea, setIdea] = useState("");
   const [challenge, setChallenge] = useState(challenges[0].title);
+  const requestIdRef = useRef(0);
   const [evaluation, setEvaluation] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -85,38 +86,41 @@ export default function Home() {
     localStorage.setItem(CRITERIA_STORAGE_KEY, JSON.stringify(next));
   }, [criteria, hydrated, challenge]);
 
-  useEffect(() => {
-    if (!idea.trim()) {
-      return;
+  const resetEvaluation = () => {
+    requestIdRef.current += 1;
+    setEvaluation(null);
+    setError("");
+    setLoading(false);
+  };
+  const submitEvaluation = async () => {
+    if (!idea.trim() || loading) return;
+    const requestId = ++requestIdRef.current;
+    setEvaluation(null);
+    setError("");
+    setLoading(true);
+    try {
+      const response = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          challenge,
+          idea,
+          language,
+          criteria,
+          mode,
+          challengeOptions: challenges.map((item) => item.title),
+        }),
+      });
+      const raw = await response.text();
+      const body = raw ? JSON.parse(raw) : {};
+      if (!response.ok) throw new Error(body.error || "Evaluation failed");
+      if (requestId === requestIdRef.current) setEvaluation(body);
+    } catch (caught) {
+      if (requestId === requestIdRef.current) setError(caught.message);
+    } finally {
+      if (requestId === requestIdRef.current) setLoading(false);
     }
-    const timer = setTimeout(async () => {
-      try {
-        setError("");
-        setLoading(true);
-        const response = await fetch("/api/evaluate", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            challenge,
-            idea,
-            language,
-            criteria,
-            mode,
-            challengeOptions: challenges.map((item) => item.title),
-          }),
-        });
-        const raw = await response.text();
-        const body = raw ? JSON.parse(raw) : {};
-        if (!response.ok) throw new Error(body.error || "Evaluation failed");
-        setEvaluation(body);
-      } catch (caught) {
-        setError(caught.message);
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [challenge, idea, language, criteria, mode]);
+  };
 
   const es = language === "es";
   const scored =
@@ -141,13 +145,16 @@ export default function Home() {
     .filter((match) => match.probability < 0.6)
     .slice(-2)
     .reverse();
-  const updateCriterion = (index, field, value) =>
+  const updateCriterion = (index, field, value) => {
+    resetEvaluation();
     setCriteria((current) =>
       current.map((item, itemIndex) =>
         itemIndex === index ? { ...item, [field]: value } : item,
       ),
     );
-  const addCriterion = () =>
+  };
+  const addCriterion = () => {
+    resetEvaluation();
     setCriteria((current) => [
       ...current,
       {
@@ -160,6 +167,7 @@ export default function Home() {
         options: [],
       },
     ]);
+  };
   const setCriterionType = (index, type) =>
     updateCriterion(index, "type", type);
   const displayedEvaluation = idea.trim() ? evaluation : null;
@@ -183,14 +191,20 @@ export default function Home() {
         <button
           type="button"
           className={es ? "active" : ""}
-          onClick={() => setLanguage("es")}
+          onClick={() => {
+            resetEvaluation();
+            setLanguage("es");
+          }}
         >
           ES
         </button>
         <button
           type="button"
           className={!es ? "active" : ""}
-          onClick={() => setLanguage("en")}
+          onClick={() => {
+            resetEvaluation();
+            setLanguage("en");
+          }}
         >
           EN
         </button>
@@ -199,14 +213,20 @@ export default function Home() {
         <button
           type="button"
           className={mode === "evaluate" ? "active" : ""}
-          onClick={() => setMode("evaluate")}
+          onClick={() => {
+            resetEvaluation();
+            setMode("evaluate");
+          }}
         >
           {es ? "Evaluar mi idea" : "Evaluate my idea"}
         </button>
         <button
           type="button"
           className={mode === "match" ? "active" : ""}
-          onClick={() => setMode("match")}
+          onClick={() => {
+            resetEvaluation();
+            setMode("match");
+          }}
         >
           {es ? "Encontrar mi desafío" : "Find my challenge"}
         </button>
@@ -222,6 +242,7 @@ export default function Home() {
             id="challenge"
             value={challenge}
             onChange={(event) => {
+              resetEvaluation();
               const selectedChallenge = event.target.value;
               setChallenge(selectedChallenge);
               const selectedCriteria =
@@ -249,7 +270,10 @@ export default function Home() {
         <textarea
           id="idea"
           value={idea}
-          onChange={(event) => setIdea(event.target.value)}
+          onChange={(event) => {
+            resetEvaluation();
+            setIdea(event.target.value);
+          }}
           placeholder={
             es
               ? "Ejemplo: una app que ayuda a agricultores a detectar cambios en la salud del suelo usando datos de NASA"
@@ -257,11 +281,24 @@ export default function Home() {
           }
         />
       </div>
-      {loading && (
-        <p className="muted status">
-          {es ? "Jev está analizando tu idea…" : "Jev is analyzing your idea…"}
-        </p>
-      )}
+      <button
+        className="submit-button"
+        type="button"
+        disabled={!idea.trim() || loading}
+        onClick={submitEvaluation}
+      >
+        {loading
+          ? es
+            ? "Jev está analizando…"
+            : "Jev is analyzing…"
+          : mode === "evaluate"
+            ? es
+              ? "Evaluar mi idea"
+              : "Evaluate my idea"
+            : es
+              ? "Encontrar mi desafío"
+              : "Find my challenge"}
+      </button>
       {error && <p className="error">{error}</p>}
       {mode === "evaluate" && (
         <>
